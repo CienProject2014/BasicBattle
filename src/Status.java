@@ -1,6 +1,7 @@
 
 public class Status {
 	private float hp;
+	private float atk;	// attack
 	private float def;	// defense
 	private float cri;	// critical
 	private float eva;	// evasion
@@ -9,19 +10,29 @@ public class Status {
 	private String condition;
 	private int velocity;
 	
-	public Status(float hp, float def, float cri, float eva, float hit,
-			float exp, String condition, int velocity) {
+
+	
+	public Status(float hp, float atk, float def, float cri, float eva,
+			float hit, float exp, String condition, int velocity) {
 		super();
 		this.hp = hp;
+		this.atk = atk;
 		this.def = def;
+		
 		this.cri = cri;
 		this.eva = eva;
 		this.hit = hit;
+		
 		this.exp = exp;
 		this.condition = condition;
 		this.velocity = velocity;
 	}
-	
+	public float getAtk() {
+		return atk;
+	}
+	public void setAtk(float atk) {
+		this.atk = atk;
+	}
 	public float getHp() {
 		return hp;
 	}
