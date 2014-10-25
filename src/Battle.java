@@ -31,15 +31,24 @@ public class Battle {
 		if( isSet ) {
 			battleLoop();
 		} else {
-			System.out.println("Oh no. Battle is not set");
+			System.out.println("배틀이 설정되지 않았습니다.");
 		}
 	}
 	
 	private void checkEnd() {
-		if(party.allDie())
+		if(party.allDie()) {
 			isEnd = true;
-		else
-			isEnd = false;
+			System.out.println("모든 영웅이 사망했습니다.");
+		}
+		else {
+			boolean monsterDie = true;
+			for (int i = 0; i < monsters.size(); i++) {
+				monsterDie = monsterDie & monsters.get(i).isDie();
+			}
+			isEnd = monsterDie;
+			if(isEnd) 
+				System.out.println("모든 몬스터가 죽었습니다.");
+		}
 	}
 	
 	private void calcOrder() {
@@ -65,10 +74,8 @@ public class Battle {
 		while( !isEnd ) {
 			Unit present = ordered.dequeue();
 			
-			if(present.type == "Hero")
-				System.out.println("Hero "+present.getName());
-			else if(present.type == "Monster")
-				System.out.println("Monster "+present.getName());
+			if(present.getType() == "Hero")
+				System.out.println(present.getName()+"의 차례입니다.");
 			
 			action(present);
 
@@ -79,30 +86,25 @@ public class Battle {
 	
 	private void action(Unit unit) {
 		if(unit.type == "Hero") {
-			Scanner scan = new Scanner(System.in);
+			Scanner scan1 = new Scanner(System.in);
 			System.out.print("공격 유형을 선택하세요(1:그냥공격, 2:스킬공격): ");
-			
 			int sel=0;
-			if(scan.hasNext()) {
-				if(scan.hasNextInt()) {
-					sel = scan.nextInt();
-				}
-			}
+			sel = scan1.nextInt();
 			
 
 			switch(sel) {
 			case 1: // plain attack
+				printMonsters();
 				System.out.print("공격할 몬스터를 선택하세요: ");
-				int target = scan.nextInt();
+				int target = scan1.nextInt();
 				plainAttack(unit, monsters.get(target));
 				break;
 			case 2: // skill attack
 				break;
 			}
-			scan.close();
 		}
 		else {
-			System.out.println("몬스터는 공격 안함");
+			//System.out.println("몬스터는 공격 안함");
 		}
 	}
 	
@@ -140,13 +142,26 @@ public class Battle {
 		
 		float newHp = b.getStatus().getHp() - damage;
 		
-		System.out.println(b.getName()+"가 "+a.getName()+"에게 "+damage+"만큼의 데미지를 입고 ");
+		System.out.println(b.getName()+"가 "+a.getName()+"에게 "+damage+"만큼의 데미지를 입고 "+
+						"체력이 "+b.getStatus().getHp()+"에서 ");
 		b.getStatus().setHp(newHp);
-		System.out.println("체력이 "+b.getStatus().getHp()+"에서 "+b.getStatus().getHp()+"이 되었습니다.");
+		System.out.println(b.getStatus().getHp()+"이 되었습니다.");
+		
+		if(b.isDie()) {
+			System.out.println(b.getName() + "가 죽었습니다.");
+			monsters.remove(b);
+			
+		}
 	}
 	
 	// a attack b using skill 
 	private void skillAttack(Unit a, Unit b, String skill) {
 		
+	}
+	
+	void printMonsters() {
+		for(int i=0; i<monsters.size(); i++) {
+			System.out.println((i) + "th: " + monsters.get(i).getName());
+		}
 	}
 }
